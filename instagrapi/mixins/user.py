@@ -63,8 +63,7 @@ class UserMixin:
             An object of UserShort type
         """
         if use_cache:
-            cache = self._userhorts_cache.get(user_id)
-            if cache:
+            if cache := self._userhorts_cache.get(user_id):
                 return cache
         variables = {
             "user_id": int(user_id),

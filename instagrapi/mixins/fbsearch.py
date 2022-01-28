@@ -13,7 +13,4 @@ class FbSearchMixin:
             'query': query,
         }
         result = self.private_request("fbsearch/places/", params=params)
-        locations = []
-        for item in result['items']:
-            locations.append(extract_location(item['location']))
-        return locations
+        return [extract_location(item['location']) for item in result['items']]

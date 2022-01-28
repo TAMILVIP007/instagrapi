@@ -168,9 +168,9 @@ class PrivateRequestMixin:
                 "IG-U-RUR": f"RVA,{self.user_id},{next_year}:01f7f627f9ae4ce2874b2e04463efdb184340968b1b006fa88cb4cc69a942a04201e544c", 
             })
         if self.ig_u_rur:
-            headers.update({"IG-U-RUR": self.ig_u_rur})
+            headers["IG-U-RUR"] = self.ig_u_rur
         if self.ig_www_claim:
-            headers.update({"X-IG-WWW-Claim": self.ig_www_claim})
+            headers["X-IG-WWW-Claim"] = self.ig_www_claim
         return headers
 
     def set_country(self, country: str = "US"):
@@ -295,8 +295,7 @@ class PrivateRequestMixin:
             self.logger.debug(
                 "private_request %s: %s (%s)", response.status_code, response.url, response.text
             )
-            mid = response.headers.get("ig-set-x-mid")
-            if mid:
+            if mid := response.headers.get("ig-set-x-mid"):
                 self.mid = mid
             self.request_log(response)
             self.last_response = response

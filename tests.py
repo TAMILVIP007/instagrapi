@@ -73,8 +73,7 @@ class BaseClientMixin:
         super().__init__(*args, **kwargs)
 
     def set_proxy_if_exists(self):
-        proxy = os.environ.get("IG_PROXY", "")
-        if proxy:
+        if proxy := os.environ.get("IG_PROXY", ""):
             self.cl.set_proxy(proxy)  # "socks5://127.0.0.1:30235"
         return True
 
@@ -107,7 +106,7 @@ class ClientPrivateTestCase(BaseClientMixin, unittest.TestCase):
             pass
         except JSONDecodeError as e:
             print('JSONDecodeError when read stored client settings. Use empty settings')
-            print(str(e))
+            print(e)
         self.cl.set_settings(settings)
         # self.cl.set_locale('ru_RU')
         # self.cl.set_timezone_offset(10800)

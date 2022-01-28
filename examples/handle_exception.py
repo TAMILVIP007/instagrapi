@@ -51,13 +51,14 @@ class Account:
                 return True
             elif isinstance(e, FeedbackRequired):
                 message = client.last_json["feedback_message"]
-                if "This action was blocked. Please try again later" in message:
+                if (
+                    "This action was blocked. Please try again later" in message
+                    or "We restrict certain activity to protect our community"
+                    in message
+                ):
                     self.freeze(message, hours=12)
                     # client.settings = self.rebuild_client_settings()
                     # return self.update_client_settings(client.get_settings())
-                elif "We restrict certain activity to protect our community" in message:
-                    # 6 hours is not enough
-                    self.freeze(message, hours=12)
                 elif "Your account has been temporarily blocked" in message:
                     """
                     Based on previous use of this feature, your account has been temporarily

@@ -64,9 +64,7 @@ class DirectMixin:
                 "fetch_reason": "manual_refresh",
             })
         if thread_message_limit:
-            params.update({
-                "thread_message_limit": thread_message_limit
-            })
+            params["thread_message_limit"] = thread_message_limit
         cursor = None
         threads = []
         self.private_request("direct_v2/get_presence/")

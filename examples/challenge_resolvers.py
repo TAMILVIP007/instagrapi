@@ -44,8 +44,7 @@ def get_code_from_email(username):
             if not match:
                 print('Skip this email, "code" not found')
                 continue
-            code = match.group(1)
-            if code:
+            if code := match.group(1):
                 return code
     return False
 
@@ -69,8 +68,7 @@ def challenge_code_handler(username, choice):
 def change_password_handler(username):
     # Simple way to generate a random string
     chars = list("abcdefghijklmnopqrstuvwxyz1234567890!&£@#")
-    password = "".join(random.sample(chars, 10))
-    return password
+    return "".join(random.sample(chars, 10))
 
 
 if __name__ == '__main__':

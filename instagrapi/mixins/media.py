@@ -456,12 +456,12 @@ class MediaMixin:
         """
         amount = int(amount)
         user_id = int(user_id)
-        medias = []
         variables = {
-            "id": user_id,
-            "first": 50 if not amount or amount > 50 else amount,  # These are Instagram restrictions, you can only specify <= 50
+            'id': user_id,
+            'first': 50 if not amount or amount > 50 else amount,
+            'after': end_cursor,
         }
-        variables["after"] = end_cursor
+
         data = self.public_graphql_request(
             variables, query_hash="e7e2f4da4b02303f74f0841279e52d76"
         )
@@ -471,8 +471,7 @@ class MediaMixin:
         edges = json_value(
             data, "user", "edge_owner_to_timeline_media", "edges", default=[]
         )
-        for edge in edges:
-            medias.append(edge["node"])
+        medias = [edge["node"] for edge in edges]
         end_cursor = page_info.get("end_cursor")
         if amount:
             medias = medias[:amount]

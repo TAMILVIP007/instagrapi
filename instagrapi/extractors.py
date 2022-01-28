@@ -256,8 +256,7 @@ def extract_direct_message(data):
         data["media_share"] = extract_media_v1(ms)
     if "media" in data:
         data["media"] = extract_direct_media(data["media"])
-    clip = data.get("clip", {})
-    if clip:
+    if clip := data.get("clip", {}):
         if "clip" in clip:
             # Instagram ¯\_(ツ)_/¯
             clip = clip.get("clip")
@@ -350,8 +349,7 @@ def extract_story_gql(data):
             item["user"] = extract_user_short(item)
             story["mentions"].append(StoryMention(**item))
         if item["__typename"] == "GraphTappableFeedMedia":
-            media = item.get("media")
-            if media:
+            if media := item.get("media"):
                 item["media_pk"] = int(media["id"])
                 item["media_code"] = media["shortcode"]
             story["medias"].append(StoryMedia(**item))
@@ -359,8 +357,7 @@ def extract_story_gql(data):
     story["hashtags"] = []
     story["stickers"] = []
     story["links"] = []
-    story_cta_url = story.get("story_cta_url", [])
-    if story_cta_url:
+    if story_cta_url := story.get("story_cta_url", []):
         story["links"] = [StoryLink(**{'webUri': story_cta_url})]
     story["user"] = extract_user_short(story.get("owner"))
     story["pk"] = int(story["id"])

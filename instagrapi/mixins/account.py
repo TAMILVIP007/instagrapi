@@ -114,8 +114,7 @@ class AccountMixin:
         data["first_name"] = data.pop("full_name")
         # Biography with entities (markup)
         result = self.private_request("accounts/edit_profile/", self.with_default_data(data))
-        biography = data.get("biography")
-        if biography:
+        if biography := data.get("biography"):
             self.account_set_biography(biography)
         return extract_account(result["user"])
 

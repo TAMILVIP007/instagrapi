@@ -64,15 +64,16 @@ class PreLoginFlowMixin:
             A boolean value
         """
         data = {
-            "android_device_id": self.android_device_id,
-            "client_contact_points": "[{\"type\":\"omnistring\",\"value\":\"%s\",\"source\":\"last_login_attempt\"}]" % self.username,
-            "phone_id": self.phone_id,
-            "usages": '["account_recovery_omnibox"]',
-            "logged_in_user_ids": "[]",  # "[\"123456789\",\"987654321\"]",
-            "device_id": self.uuid,
+            'android_device_id': self.android_device_id,
+            'client_contact_points': "[{\"type\":\"omnistring\",\"value\":\"%s\",\"source\":\"last_login_attempt\"}]"
+            % self.username,
+            'phone_id': self.phone_id,
+            'usages': '["account_recovery_omnibox"]',
+            'logged_in_user_ids': '[]',
+            'device_id': self.uuid,
+            '_csrftoken': self.token,
         }
-        # if login is False:
-        data["_csrftoken"] = self.token
+
         return self.private_request("accounts/get_prefill_candidates/", data, login=login)
 
     def sync_device_features(self, login: bool = False) -> Dict:
@@ -94,7 +95,7 @@ class PreLoginFlowMixin:
             "server_config_retrieval": "1",
             # "experiments": config.LOGIN_EXPERIMENTS,
         }
-        if login is False:
+        if not login:
             data["_uuid"] = self.uuid
             data["_uid"] = self.user_id
             data["_csrftoken"] = self.token
@@ -119,7 +120,7 @@ class PreLoginFlowMixin:
             "id": self.uuid,
             "server_config_retrieval": "1",
         }
-        if login is False:
+        if not login:
             data["_uid"] = self.user_id
             data["_uuid"] = self.uuid
             data["_csrftoken"] = self.token
@@ -161,10 +162,7 @@ class PostLoginFlowMixin:
         bool
             A boolean value
         """
-        check_flow = []
-        # chance = random.randint(1, 100) % 2 == 0
-        # reason = "pull_to_refresh" if chance else "cold_start"
-        check_flow.append(self.get_reels_tray_feed("cold_start"))
+        check_flow = [self.get_reels_tray_feed("cold_start")]
         check_flow.append(self.get_timeline_feed(["cold_start_fetch"]))
         return all(check_flow)
 

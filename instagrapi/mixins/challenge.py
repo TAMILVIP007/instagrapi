@@ -27,8 +27,7 @@ class ChallengeChoice(Enum):
 def extract_messages(challenge):
     messages = []
     for item in challenge["extraData"].get("content"):
-        message = item.get("title", item.get("text"))
-        if message:
+        if message := item.get("title", item.get("text")):
             dot = "" if message.endswith(".") else "."
             messages.append(f"{message}{dot}")
     return messages
@@ -152,7 +151,7 @@ class ChallengeResolveMixin:
         choice = ChallengeChoice.EMAIL
         result = session.post(challenge_url, {"choice": choice})
         result = result.json()
-        for retry in range(8):
+        for _ in range(8):
             time.sleep(WAIT_SECONDS)
             try:
                 # FORM TO ENTER CODE
@@ -183,7 +182,7 @@ class ChallengeResolveMixin:
             "VerifySMSCodeForm",
             "VerifySMSCodeFormForSMSCaptcha",
         ), result
-        for retry_code in range(5):
+        for _ in range(5):
             for attempt in range(1, 11):
                 code = asyncio.run(self.challenge_code_handler(self.username, choice))
                 if code:
